@@ -59,6 +59,34 @@
             --positive: #10b981;
             --warning: #f59e0b;
         }
+/* ====== DARK / LIGHT THEME ====== */
+
+:root[data-theme="dark"] {
+    --bg: #0f172a;
+    --sidebar: #1e293b;
+    --accent: #3b82f6;
+    --card: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+}
+
+:root[data-theme="light"] {
+    --bg: #f8fafc;
+    --sidebar: #ffffff;
+    --accent: #2563eb;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text-main: #0f172a;
+    --text-dim: #475569;
+}
+
+/* Smooth transition */
+* {
+    transition: background-color 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease;
+}
 
         * {
             box-sizing: border-box;
