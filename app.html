@@ -2,7 +2,7 @@
 <html lang="en-gb" data-theme="dark" dir="ltr" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">701
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>India Real Estate Analyzer | BITS Pilani WILP</title>
     <style data-critical="layout">
   html, body, #root {
@@ -699,39 +699,24 @@ function logout() {
         // CORE LOGIC (ML / MATH)
         // ---------------------------------------------------------
         function calculatePrice(city, locality, sqft, bhk, age) {
-
-    const cityData = LOCATIONS[city];
-
-    // Base city price from dataset
-    const basePrice = cityData.basePrice;
-
-    // Locality multiplier from JSON
-    const localityMultiplier =
-        cityData.localities[locality] || 1;
-
-    // -------- LINEAR REGRESSION WEIGHTS --------
-
-    const intercept = 300000;
-
-    const sqftWeight = basePrice;
-
-    const bhkWeight = 450000;
-
-    const ageWeight = -35000;
-
-    // -------- PREDICTION --------
-
-    let predictedPrice =
-        intercept +
-        (sqft * sqftWeight * localityMultiplier) +
-        (bhk * bhkWeight) +
-        (age * ageWeight);
-
-    // Prevent negative values
-    predictedPrice = Math.max(predictedPrice, 500000);
-
-    return Math.round(predictedPrice);
-}
+            const cityData = LOCATIONS[city];
+            const locMult = cityData.localities[locality] || 1.0;
+            
+            // Base value
+            let price = cityData.basePrice * sqft * locMult;
+            
+            // Bedroom weight
+            const bhkPremium = 1 + (bhk - 1) * WEIGHTS.bedroom;
+            price *= bhkPremium;
+            
+            // Age adjustment
+            const ageDepreciation = 1 - (age * WEIGHTS.agePenalty);
+            price *= ageDepreciation;
+            
+            // Random jitter for realism
+            const jitter = 0.98 + (Math.random() * 0.04);
+            return Math.round(price * jitter);
+        }
 
         function generateDataset() {
             marketData = [];
